@@ -1,0 +1,27 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+dist/
+build/
+
+# ---- المشروع: مخرجات مُشتقّة (تُبنى محليًّا) ----
+artifacts/
+data/derived/
+*.npz
+*.npy
+*.bin
+checkpoints/
+logs/
+
+# ---- نظام ----
+.DS_Store
+Thumbs.db
+node_modules/
