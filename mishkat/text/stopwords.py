@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from typing import Final
 
+from .normalize import SEARCH, normalize
+
 _RAW: Final = """
 من في على الى عن مع هذا هذه ذلك تلك هولاء اولئك الذي التي اللذان اللتان الذين
 اللاتي اللواتي اللاتي ما ماذا لماذا كيف متى اين هل اي ايه كل بعض غير سوى بين
@@ -34,16 +36,22 @@ _RAW: Final = """
 
 # كلماتٌ «طرفية»: قد تحمل دلالةً في نطاقٍ ما (مثل «بين» في الفلسفة، «كان» في
 # التاريخ)، فلا تُصفّى إلا إن طلب المستخدم ذلك.
-_SOFT: Final = {
+_SOFT_RAW: Final = {
     "كان", "كانت", "يكون", "تكون", "بين", "حول", "خلال", "قبل", "بعد",
     "عند", "ضد", "نحو", "منذ", "حتى", "كل", "بعض", "غير", "نفس", "ذات",
     "اكثر", "اقل", "جدا", "ايضا", "مع", "قد",
 }
+_SOFT: Final = {normalize(w, SEARCH) for w in _SOFT_RAW}
+
+# كل كلمةٍ تُطبَّع على مستوى البحث لضمان المطابقة مع مخرجات التطبيع
+# («على» → «علي»)، وإلّا فشلت المقارنة بلا سببٍ ظاهر.
+_NORM_RAW: Final = {normalize(w, SEARCH) for w in _RAW if w}
 
 # كلمات إيقاف «صلبة»: لا تحمل دلالةً في أي نطاق (الطرفية مستثناة).
-_CORE: Final = set(_RAW) - _SOFT
+_CORE: Final = _NORM_RAW - _SOFT
 
 stopwords: Final[frozenset[str]] = frozenset(_CORE | _SOFT)
+
 CORE_STOPWORDS: Final[frozenset[str]] = frozenset(_CORE)
 SOFT_STOPWORDS: Final[frozenset[str]] = frozenset(_SOFT)
 
@@ -65,6 +73,9 @@ def is_stopword(word: str, *, soft: bool = True) -> bool:
     """
     if not word:
         return False
+    if word not in CORE_STOPWORDS and word not in SOFT_STOPWORDS:
+        # تطبيعٌ دفاعيّ: المستدعي قد يمرّر شكلًا غير مطبَّع («على»)
+        word = normalize(word, SEARCH)
     if word in CORE_STOPWORDS:
         return True
     return soft and word in SOFT_STOPWORDS

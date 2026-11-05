@@ -26,6 +26,7 @@ from dataclasses import dataclass
 from typing import Final, Iterable, Iterator
 
 from .normalize import STRICT, normalize
+from .stem import light_stem
 
 WEAK: Final = "اوي"
 
@@ -92,9 +93,18 @@ _RAW_ROOTS: Final = """
 حسب عدد ضرب قسم كسر جمع طرح ضاع ضعف قوي كبر صغر
 """.split()
 
+# جذورٌ شائعة أُضيفت بعد اختبار المجموعة (كلها ثلاثية صحيحة)
+_EXTRA_ROOTS: Final = """
+دور عمل عون بيع قول صير كون سير طير جري رقي نمي وعي هدي رضي قوي ضوي
+قلل ملح حسب شكل درس سكن وطن سفر حضر سمع بصر نظر فتح
+منع طوق طيق جرب دلل ذكو نمو نهج بين شفي نبت زرع بني دمي
+طور نفس روح جسم صوت لون حرف رقم خطط صمم هندس برهن ثبت
+حيي سنن بني نبأ خبأ قرأ بدأ نشأ ملأ دفأ رءس رئس
+""".split()
+
 _ALPHABET = "ابتثجحخدذرزسشصضطظعغفقكلمنهوي"
 KNOWN_ROOTS: Final[frozenset[str]] = frozenset(
-    r for r in _RAW_ROOTS if len(r) == 3 and all(ch in _ALPHABET for ch in r)
+    r for r in (_RAW_ROOTS + _EXTRA_ROOTS) if len(r) == 3 and all(ch in _ALPHABET for ch in r)
 )
 
 
@@ -117,9 +127,16 @@ def _bases(word: str) -> list[str]:
 
     b = word
     for p in _NOMINAL_PREFIXES:
-        if b.startswith(p) and len(b) - len(p) >= 3 and not b[len(p) :].startswith("ا"):
-            seeds.append(b[len(p) :])
-            break
+        need = 2 if p in {"ال", "لل"} else 3
+        if not b.startswith(p) or len(b) - len(p) < need:
+            continue
+        rest = b[len(p) :]
+        # قاعدة: لا تبدأ الكلمة بعد سابقةٍ مفردة (و/ف/ب/ك/ل) بألف؛ أما بعد «ال»
+        # فالألف طبيعية («الاستقلال» → «استقلال»).
+        if len(p) == 1 and rest.startswith("ا"):
+            continue
+        seeds.append(rest)
+        break
 
     for x in list(seeds):
         v = x
@@ -164,6 +181,9 @@ def _weak_variants(root: str) -> Iterable[str]:
     if len(root) != 3:
         return
     subs = {"ا": ("و", "ي"), "و": ("ا", "ي"), "ي": ("ا", "و")}
+    # همزةٌ في آخر الجذر كثيرًا ما تكون هاءً في الأصل: ماء → موه
+    if root[-1] == "ء":
+        yield root[:-1] + "ه"
     for i, ch in enumerate(root):
         for alt in subs.get(ch, ()):
             yield root[:i] + alt + root[i + 1 :]
@@ -176,56 +196,106 @@ def _score(root: str, source: str) -> float:
         return -10.0 + len(root)
     s = 0.0
     if root in KNOWN_ROOTS:
-        s += 6.0
+        s += 4.0
+    # «ال» في بداية الجذر أثرٌ من أداة التعريف لا جذر (الا في «ألم» ونحوه،
+    # فتُعاقَب العقوبة بدل الحذف كي لا يضيع الجذر الحقيقي إن لم يوجد بديل).
+    if root[0] == "ا" and root[1] == "ل":
+        s -= 8.0
     if root[0] in WEAK:
         s -= 1.5
     if root[0] == "ا":
         s -= 2.0
     if root.count(root[0]) == 3:
         s -= 3.0
-    if root[1] == "ا" and root not in KNOWN_ROOTS:
-        s -= 2.0
+    # الألف وسطًا ليست من الجذر عادةً (فعلٌ أجوف): «دار» → «دور»، «قال» → «قول»
+    if root[1] == "ا":
+        s -= 2.5
     if root[-1] in WEAK and root in KNOWN_ROOTS:
         s += 0.5
-    s += {"pattern": 1.5, "strip": 1.0, "quad": 1.0, "asis": 0.5}.get(source, -1.0)
+    # جذرٌ مضعّف (الحرف الثاني = الثالث) بنيةٌ عربية أصيلة: مرّ، حلّ، قلّ
+    if root[1] == root[2] and root[1] not in WEAK:
+        s += 1.5
+    # ترتيب الثقة: مطابقة وزنٍ صريحة > تجريد سوابق ولواحق > جذر معروف مباشرة >
+    # إسقاط حروفٍ عشوائي (وهو الأضعف لأنه قد يجد أيّ جذرٍ معروف بالصدفة).
+    s += {
+        "pattern": 2.0,
+        "strip": 1.5,
+        "quad": 1.0,
+        "asis": 0.5,
+        "delete": -3.0,
+        "geminate": 1.0,
+    }.get(source, -1.0)
     return s
 
 
 def _candidates(word: str) -> list[RootCandidate]:
     cands: list[RootCandidate] = []
 
-    for base in _bases(word):
+    bases = _bases(word)
+    # أداة التعريف ليست من الكلمة: نتجاهل أي قاعدةٍ ما زالت تبدأ بـ«ال» إن وُجد
+    # بديلٌ مجرّد منها، وإلا وُلّدت جذورٌ وهمية مثل «لمي» من «المياه».
+    stripped = [b for b in bases if not (b.startswith("ال") and len(b) > 3)]
+    bases = stripped or bases
+
+    for bidx, base in enumerate(bases):
+        penalty = 0.35 * bidx  # كل تحويلٍ إضافي يُنقص الثقة قليلًا
+        if len(base) == 2:
+            # «الطب» → «طب» → «طبب» (الجذر المضعّف هو الأصل)
+            doubled = base + base[-1]
+            cands.append(RootCandidate(doubled, _score(doubled, "strip") - penalty, "geminate"))
+            continue
         if len(base) == 3:
-            cands.append(RootCandidate(base, _score(base, "strip"), "strip"))
+            cands.append(RootCandidate(base, _score(base, "strip") - penalty, "strip"))
             continue
         if len(base) == 4 and base in QUAD_ROOTS:
-            cands.append(RootCandidate(base, _score(base, "quad"), "quad"))
+            cands.append(RootCandidate(base, _score(base, "quad") - penalty, "quad"))
         for pat in PATTERNS:
             r = _match_pattern(base, pat)
             if r:
-                cands.append(RootCandidate(r, _score(r, "pattern"), "pattern"))
+                cands.append(RootCandidate(r, _score(r, "pattern") - penalty, "pattern"))
         # إسقاط حرفٍ أو حرفين حتى الوصول إلى ثلاثة
-        _reduce(base, cands, depth=0)
+        _reduce(base, cands, depth=0, penalty=penalty)
 
-    # التصحيح الإعلالي
+    # التصحيح الإعلالي (مرّتان: «ماء» → «ماه» → «موه»)
     expanded = list(cands)
+    second: list[RootCandidate] = []
     for c in cands:
         for alt in _weak_variants(c.root):
             if alt != c.root:
-                expanded.append(RootCandidate(alt, c.score - 0.5, c.source + "+weak"))
-    return expanded
+                # البديل يُعاد تسجيله بمُعجم الجذور (قد يكون «موه» معروفًا
+                # بينما «ميه» المولَّد منه ليس كذلك)
+                sc = max(c.score - 0.5, _score(alt, c.source) - 0.5)
+                second.append(RootCandidate(alt, sc, c.source + "+weak"))
+    for c in second:
+        for alt in _weak_variants(c.root):
+            if alt != c.root:
+                sc = max(c.score - 0.5, _score(alt, c.source) - 1.0)
+                expanded.append(RootCandidate(alt, sc, c.source + "+weak2"))
+    # الحذف يبقى أضعف من المطابقة الصريحة عند تساوي الدرجات
+    return expanded + second
 
 
 def _reduce(
-    w: str, out: list[RootCandidate], *, depth: int, max_depth: int = 2
+    w: str,
+    out: list[RootCandidate],
+    *,
+    depth: int,
+    penalty: float = 0.0,
+    max_depth: int = 2,
 ) -> None:
     if len(w) == 3:
-        out.append(RootCandidate(w, _score(w, "delete"), "delete"))
+        out.append(RootCandidate(w, _score(w, "delete") - penalty - 0.4 * depth, "delete"))
         return
     if len(w) < 3 or depth >= max_depth:
         return
     for i in range(len(w)):
-        _reduce(w[:i] + w[i + 1 :], out, depth=depth + 1, max_depth=max_depth)
+        _reduce(
+            w[:i] + w[i + 1 :],
+            out,
+            depth=depth + 1,
+            penalty=penalty,
+            max_depth=max_depth,
+        )
 
 
 def root_candidates(word: str, *, limit: int = 5) -> list[RootCandidate]:
@@ -271,7 +341,14 @@ def extract_root(word: str) -> str:
     if not w:
         return ""
     cands = root_candidates(word, limit=1)
-    return cands[0].root if cands else w
+    if not cands:
+        return w
+    best = cands[0]
+    # لا جذر واثق؟ نُعيد ساق الكلمة بدل تخمينٍ ضعيف (الدخيل لا يُجذَّر بالأنماط)
+    if best.score < 0.8 and best.source.startswith("delete"):
+        stem = light_stem(word)
+        return stem if len(stem) >= 3 else w
+    return best.root
 
 
 def root_confidence(word: str) -> float:

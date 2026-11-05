@@ -54,7 +54,9 @@ def _strip_one_prefix(word: str, min_len: int = MIN_STEM) -> str:
 
 def _strip_one_suffix(word: str, min_len: int = MIN_STEM) -> str:
     for s in SUFFIXES:
-        if word.endswith(s) and len(word) - len(s) >= min_len:
+        # اللواحق المفردة (ه، ك، ي، ت، ن، ا، و) لا تُحذف إن قصُر الباقي عن أربعة
+        need = max(min_len, 4) if len(s) == 1 else min_len
+        if word.endswith(s) and len(word) - len(s) >= need:
             return word[: -len(s)]
     return word
 
@@ -102,11 +104,12 @@ def strict_stem(word: str) -> str:
     while len(w) > 3 and w[-1] == w[-2]:
         w = w[:-1]
     # إسقاط حروف العلّة الزائدة لتقارب العائلة الصرفية (كاتب/كتاب/مكتوب → كتب)
-    for i in range(1, len(w)):
-        if len(w) <= 3:
-            break
+    i = 1
+    while i < len(w) and len(w) > 3:
         if w[i] in _DEFECTIVE:
             w = w[:i] + w[i + 1 :]
+        else:
+            i += 1
     while len(w) > 3 and w[-1] == w[-2]:
         w = w[:-1]
     return w
