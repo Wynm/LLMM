@@ -113,6 +113,17 @@ def run_benchmark(*, queries: int = 40) -> dict:
         )
     report["hnsw_scaling"] = scaling
 
+    # تقييم الجودة: الأداء بلا جودة رقمٌ ناقص
+    from .engine import Engine as _Engine
+    from .evaluate import run_eval
+
+    try:
+        eng = _Engine.load()
+        evals = run_eval(eng, k=10, include_rrf=True)
+        report["retrieval_eval"] = [r.to_dict() | {"groups": {k: v.to_dict() for k, v in (r.groups or {}).items()}} for r in evals]
+    except Exception as exc:  # pragma: no cover - التقييم اختياريٌّ في التقرير
+        report["retrieval_eval"] = {"error": str(exc)}
+
     report["graph_query_ms"] = _timeit(
         lambda: engine.graph_query("MATCH (?x) -[ألّف]-> (?y)"), repeat=5
     )

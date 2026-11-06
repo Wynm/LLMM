@@ -1,4 +1,4 @@
-.PHONY: help bootstrap test cov lint build run bench clean stats corpus-check train generate
+.PHONY: help bootstrap test cov lint build run bench clean stats corpus-check eval train generate
 
 PY ?= python3
 PORT ?= 8000
@@ -12,6 +12,8 @@ help:
 	@echo "  make run          تشغيل الاستوديو على المنفذ $(PORT)"
 	@echo "  make train        تدريب المحوّل العصبي"
 	@echo "  make generate     توليد نصّ من المحوّل"
+	@echo "  make eval         تقييم جودة الاسترجاع (MRR/Recall/nDCG)"
+	@echo "  make corpus-check التحقّق من سلامة المجموعة"
 	@echo "  make bench        تقرير أداء"
 	@echo "  make stats        إحصاءات المجموعة"
 	@echo "  make clean        حذف المخرجات المُشتقّة"
@@ -45,6 +47,9 @@ stats:
 
 corpus-check:
 	$(PY) -m mishkat.cli corpus-check
+
+eval:
+	$(PY) -m mishkat.cli eval --misses 5
 
 clean:
 	rm -rf artifacts .pytest_cache

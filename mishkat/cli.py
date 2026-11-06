@@ -177,6 +177,35 @@ def cmd_corpus_check(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_eval(args: argparse.Namespace) -> int:
+    """تقييم جودة الاسترجاع على مجموعةٍ مُعنونة — أرقامٌ لا انطباعات."""
+    from .evaluate import load_queries, run_eval
+    from .engine import Engine
+
+    engine = Engine.load(args.artifacts)
+    queries = load_queries(args.queries) if args.queries else None
+    qs = queries or load_queries()
+    print(_c("▸ تقييم الاسترجاع", BOLD))
+    print(f"  {len(qs)} استعلامًا مُعنونًا · k = {args.k}")
+    reports = run_eval(engine, queries, k=args.k)
+    print()
+    for rep in reports:
+        print("  " + rep.row())
+        for line in rep.group_rows():
+            print(line)
+    best = max(reports, key=lambda r: (r.mrr, r.recall))
+    print()
+    print(_c(f"  الأفضل في MRR: {best.strategy} ({best.mrr:.3f})", GREEN))
+    shipped = next((r for r in reports if r.strategy == "هجين (المُشحون)"), None)
+    if args.misses and shipped and shipped.misses:
+        print()
+        print(_c(f"  إخفاقاتٌ كاملة ({len(shipped.misses)} من {shipped.n}):", BOLD))
+        for m in shipped.misses[: args.misses]:
+            got = ", ".join(m["got"][:3]) or "لا شيء"
+            print(f"   ✗ {m['query']}  ← توقّعنا {', '.join(m['expect'])}، جاء {got}")
+    return 0
+
+
 def cmd_train(args: argparse.Namespace) -> int:
     """تدريب المحوّل العصبي على نصوص المجموعة."""
     from .lm.model import Config
@@ -202,8 +231,11 @@ def cmd_train(args: argparse.Namespace) -> int:
         tcfg=TrainConfig(steps=args.steps, batch_size=args.batch, lr=args.lr),
         progress=progress,
     )
-    print(_c(f"✔ اكتمل التدريب: خسارة {report['final_loss']} · حجز {report['final_val_loss']}", GREEN))
+    loss = f"{report['final_loss']:.3f}"
+    val = f"{report['final_val_loss']:.3f}"
+    print(_c(f"✔ اكتمل التدريب: خسارة {loss} · حجز {val}", GREEN))
     print(f"  {report['params']:,} وسيطًا · {report['steps_per_second']} خطوة/ثانية · {report['elapsed_s']}s")
+    print(f"  حُفظ في {args.out} — جرّب: python -m mishkat.cli generate \"العلم\"")
     return 0
 
 
@@ -296,6 +328,13 @@ def build_parser() -> argparse.ArgumentParser:
     bb = sub.add_parser("bench", help="تقرير أداء")
     bb.add_argument("--queries", type=int, default=40)
     bb.set_defaults(func=cmd_bench)
+
+    ev = sub.add_parser("eval", help="تقييم جودة الاسترجاع")
+    ev.add_argument("--k", type=int, default=10)
+    ev.add_argument("--queries", default=None, help="ملفّ استعلامات بديل (JSONL)")
+    ev.add_argument("--artifacts", default="artifacts", help="مجلّد المخرجات")
+    ev.add_argument("--misses", type=int, default=0, help="اعرض أول n إخفاقٍ كامل")
+    ev.set_defaults(func=cmd_eval)
 
     cc = sub.add_parser("corpus-check", help="تحقّق من المجموعة")
     cc.add_argument("--corpus", default=None)

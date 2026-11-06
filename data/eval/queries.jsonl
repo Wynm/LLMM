@@ -1,0 +1,59 @@
+{"query": "حركة عطارد", "expect": ["ast-03"], "kind": "lexical"}
+{"query": "الدورة الدموية الصغرى", "expect": ["med-02"], "kind": "lexical"}
+{"query": "كيف يعود الدم من الرئتين إلى القلب", "expect": ["med-02"], "kind": "semantic"}
+{"query": "الجبر والمعادلات", "expect": ["math-01"], "kind": "lexical"}
+{"query": "من قاس محيط الأرض بدقة", "expect": ["math-02"], "kind": "semantic"}
+{"query": "الكاميرا المظلمة", "expect": ["opt-02"], "kind": "lexical"}
+{"query": "كيف تتكوّن الصورة عبر ثقب صغير", "expect": ["opt-02"], "kind": "semantic"}
+{"query": "الانتباه في الشبكات العصبية", "expect": ["ai-02"], "kind": "lexical"}
+{"query": "الاسترجاع المعزز بالتوليد", "expect": ["ai-03"], "kind": "lexical"}
+{"query": "كيف نقلّل هلوسة النماذج بالتوثيق", "expect": ["ai-03"], "kind": "semantic"}
+{"query": "الإنتروبيا والضغط", "expect": ["cs-02"], "kind": "lexical"}
+{"query": "لماذا يمكن ضغط البيانات", "expect": ["cs-02"], "kind": "semantic"}
+{"query": "التشفير والمفتاح", "expect": ["cs-03"], "kind": "lexical"}
+{"query": "هندسة الحرف العربي", "expect": ["art-01"], "kind": "lexical"}
+{"query": "المقامات في الموسيقى", "expect": ["art-02"], "kind": "lexical"}
+{"query": "الأقواس والقباب", "expect": ["eng-03"], "kind": "lexical"}
+{"query": "آلات تعمل بالماء", "expect": ["eng-01"], "kind": "semantic"}
+{"query": "الوكالة والحوالة", "expect": ["eco-01"], "kind": "lexical"}
+{"query": "مشكلة المقايضة", "expect": ["eco-02"], "kind": "lexical"}
+{"query": "العصبية وقيام الدول", "expect": ["hist-01"], "kind": "mixed"}
+{"query": "لماذا تسقط الدول", "expect": ["hist-01"], "kind": "semantic"}
+{"query": "خريطة العالم على سبعين لوحًا", "expect": ["geo-01"], "kind": "lexical"}
+{"query": "الإسطرلاب", "expect": ["nav-01"], "kind": "lexical"}
+{"query": "ابن البيطار والأدوية", "expect": ["bio-01"], "kind": "mixed"}
+{"query": "الجاحظ وسلوك الحيوان", "expect": ["bio-02"], "kind": "mixed"}
+{"query": "الجينوم والبروتينات", "expect": ["bio-03"], "kind": "lexical"}
+{"query": "كيف يميّز الجسم نفسه عن الغريب", "expect": ["bio-04"], "kind": "semantic"}
+{"query": "الخوارزمي", "expect": ["math-01", "cs-01"], "kind": "entity"}
+{"query": "الكسور العشرية", "expect": ["math-02"], "kind": "lexical"}
+{"query": "الأرقام الهندية والموضع العشري", "expect": ["math-04"], "kind": "lexical"}
+{"query": "الخليل بن أحمد والعروض", "expect": ["ling-01"], "kind": "mixed"}
+{"query": "سيبويه والكتاب", "expect": ["ling-02"], "kind": "mixed"}
+{"query": "تهافت الفلاسفة", "expect": ["phil-04"], "kind": "lexical"}
+{"query": "ابن رشد وشرح أرسطو", "expect": ["phil-03"], "kind": "mixed"}
+{"query": "المدينة الفاضلة", "expect": ["phil-02"], "kind": "lexical"}
+{"query": "تهذيب الأخلاق", "expect": ["phil-05"], "kind": "semantic"}
+{"query": "الرازي والجدري", "expect": ["med-04"], "kind": "mixed"}
+{"query": "الزهراوي والجراحة", "expect": ["med-03"], "kind": "mixed"}
+{"query": "ابن سينا والقانون", "expect": ["med-01"], "kind": "mixed"}
+{"query": "التقطير", "expect": ["chem-02"], "kind": "lexical"}
+{"query": "منهج التجربة في الكيمياء", "expect": ["chem-01"], "kind": "semantic"}
+{"query": "الخلايا الشمسية", "expect": ["energy-01"], "kind": "semantic"}
+{"query": "توازن الشبكة الكهربائية", "expect": ["energy-02"], "kind": "mixed"}
+{"query": "الاحتباس الحراري", "expect": ["env-01"], "kind": "lexical"}
+{"query": "خدمات النظم البيئية", "expect": ["env-02"], "kind": "lexical"}
+{"query": "المدينة الذكية", "expect": ["city-01"], "kind": "lexical"}
+{"query": "الزمن المهدور في النقل", "expect": ["city-02"], "kind": "semantic"}
+{"query": "المدرسة النظامية والوقف", "expect": ["edu-01"], "kind": "mixed"}
+{"query": "مرصد مراغة", "expect": ["ast-02"], "kind": "lexical"}
+{"query": "الزيج", "expect": ["ast-05", "ast-01", "ast-04"], "kind": "entity"}
+{"query": "قواعد توزيع حصص الماء", "expect": ["water-01"], "kind": "semantic"}
+{"query": "التقويم الزراعي", "expect": ["agri-01"], "kind": "lexical"}
+{"query": "الصحن والظلّ في العمارة", "expect": ["arch-01"], "kind": "mixed"}
+{"query": "أصول الفقه", "expect": ["law-01"], "kind": "lexical"}
+{"query": "المنهج التجريبي", "expect": ["opt-01", "chem-01"], "kind": "entity"}
+{"query": "وحدة العقل", "expect": ["phil-03"], "kind": "lexical"}
+{"query": "جدول فلكي يتنبّأ بمواضع الأجرام", "expect": ["ast-05"], "kind": "semantic"}
+{"query": "ما الذي حوّل النباتات إلى عطر", "expect": ["chem-02"], "kind": "semantic"}
+{"query": "كيف تُنقل الأحمال في الفضاءات الواسعة", "expect": ["eng-03"], "kind": "semantic"}

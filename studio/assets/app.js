@@ -737,7 +737,7 @@ async function loadDash() {
     ['عُقد الرسم', s.graph.nodes, `${s.graph.edges} حافة`],
     ['حواف مستنتجة', s.inference.derivable, (s.inference.rules || []).length + ' قاعدة'],
     ['زمن البناء', `${s.build_seconds}s`, 'على نواتين'],
-    ['اختبارات', '204', 'تمرّ كلها'],
+    ['اختبارات', '260', 'تمرّ كلها'],
   ];
   $('#cards').innerHTML = cards.map(([k, v, sub]) => `
     <div class="card"><div class="k">${esc(k)}</div><div class="v">${esc(v)}</div><div class="s">${esc(sub)}</div></div>`).join('');
@@ -760,6 +760,8 @@ async function loadDash() {
       <span class="num">${count}</span>
     </div>`).join('');
 
+  renderEval();
+
   const build = {
     الإصدار: s.version,
     'زمن البناء': `${s.build_seconds} ثانية`,
@@ -770,6 +772,31 @@ async function loadDash() {
     'كثافة مصفوفة التجاور': `${s.space.pairs} زوجًا`,
   };
   $('#build-dl').innerHTML = Object.entries(build).map(([k, v]) => `<div><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');
+}
+
+async function renderEval() {
+  const box = $('#eval-table');
+  if (!box) return;
+  try {
+    const d = await api('/api/eval?k=10');
+    if (!d.available) { box.innerHTML = '<p class="muted">لا مجموعة تقييم.</p>'; return; }
+    const rows = d.reports.map((r) => {
+      const best = r.strategy.includes('هجين');
+      return `<tr class="${best ? 'is-best' : ''}">
+        <td>${esc(r.strategy)}</td>
+        <td class="num">${r.mrr.toFixed(3)}</td>
+        <td class="num">${r.recall.toFixed(3)}</td>
+        <td class="num">${r.hit1.toFixed(3)}</td>
+        <td class="num">${r.latency_ms.toFixed(1)} ms</td>
+      </tr>`;
+    }).join('');
+    box.innerHTML = `<table><thead><tr>
+      <th>الاستراتيجية</th><th>MRR</th><th>R@10</th><th>H@1</th><th>الزمن</th>
+    </tr></thead><tbody>${rows}</tbody></table>
+    <p class="muted small">المرجع: <code>data/eval/queries.jsonl</code> · <code>make eval</code></p>`;
+  } catch (err) {
+    box.innerHTML = `<p class="muted">تعذّر التقييم: ${esc(err.message)}</p>`;
+  }
 }
 
 /* ───────────────────────────── التهيئة ───────────────────────────── */

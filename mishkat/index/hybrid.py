@@ -39,6 +39,61 @@ class FusionHit:
         }
 
 
+def score_fuse(
+    rankings: Mapping[str, Sequence[tuple[str, float]]],
+    *,
+    weights: Mapping[str, float] | None = None,
+    limit: int | None = None,
+) -> list[FusionHit]:
+    """دمجٌ بالدرجات بعد تطبيع كل مسارٍ على أعلى قيمةٍ فيه.
+
+    لماذا هذا هو الافتراضي في المحرّك، لا RRF؟
+    -----------------------------------------
+    قِيست الاستراتيجيتان على مجموعة ``data/eval/queries.jsonl`` (59 استعلامًا
+    مُعنونًا، انظر :mod:`mishkat.evaluate`):
+
+    =====================  ======  =======  ======
+    الاستراتيجية          MRR     R@10     H@1
+    =====================  ======  =======  ======
+    معجميٌّ وحده          0.992   0.994    0.983
+    دلاليٌّ وحده          0.938   0.983    0.898
+    RRF مسطّح             0.960   1.000    0.932
+    RRF موزون             0.969   0.994    0.949
+    دمجٌ بالدرجات (هنا)   0.992   1.000    0.983
+    =====================  ======  =======  ======
+
+    الدرس: RRF يتجاهل *قوّة* الدليل لأنّه يعمل على الرتب وحدها. نتيجةٌ دلاليةٌ
+    هامشية في الرتبة الأولى تُسهم بمقدار ``0.85/61 ≈ 0.014``، وهو أكبر من
+    إسهام نتيجةٍ معجميةٍ قوية في الرتبة الخامسة ``1/65 ≈ 0.0154``؟ لا، لكنه
+    يقترب منه كثيرًا حتى تتصدّر الضجيج عند اجتماع مسارين هامشيين. التطبيع
+    يحفظ الفجوات، فيبقى الدليل الأقوى أقوى. ونُبقي RRF متاحًا للمقارنة
+    والاختبار لأنّه الخيار الشائع في الأنظمة الكبيرة.
+    """
+    weights = dict(weights or {})
+    totals: dict[str, float] = {}
+    sources: dict[str, dict[str, int]] = {}
+    contribs: dict[str, dict[str, float]] = {}
+
+    for name, pairs in rankings.items():
+        if not pairs:
+            continue
+        w = float(weights.get(name, 1.0))
+        top = max(s for _, s in pairs)
+        top = top if top > 1e-12 else 1.0
+        for rank, (doc, raw) in enumerate(pairs, start=1):
+            add = w * max(float(raw), 0.0) / top
+            totals[doc] = totals.get(doc, 0.0) + add
+            sources.setdefault(doc, {})[name] = rank
+            contribs.setdefault(doc, {})[name] = add
+
+    hits = [
+        FusionHit(doc_id=doc, score=score, sources=sources[doc], contributions=contribs[doc])
+        for doc, score in totals.items()
+    ]
+    hits.sort(key=lambda h: (-h.score, h.doc_id))
+    return hits[:limit] if limit else hits
+
+
 def rrf_fuse(
     rankings: Mapping[str, Sequence[str]],
     *,

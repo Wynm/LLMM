@@ -284,6 +284,34 @@ def create_app() -> FastAPI:
         }
 
     # ------------------------------------------------------------ المحوّل
+    @app.get("/api/eval")
+    def eval_report(k: int = 10) -> dict:
+        """جودة الاسترجاع مقيسةً على مجموعةٍ مُعنونة — داخل الواجهة نفسها."""
+        from ..evaluate import load_queries, run_eval
+
+        try:
+            reports = run_eval(engine(), k=max(1, min(k, 50)), include_rrf=True)
+        except FileNotFoundError:
+            return {"available": False, "reason": "لا مجموعة استعلامات"}
+        return {
+            "available": True,
+            "queries": len(load_queries()),
+            "k": k,
+            "reports": [
+                {
+                    "strategy": r.strategy,
+                    "n": r.n,
+                    "mrr": round(r.mrr, 4),
+                    "recall": round(r.recall, 4),
+                    "ndcg": round(r.ndcg, 4),
+                    "hit1": round(r.hit1, 4),
+                    "latency_ms": round(r.latency_ms, 2),
+                    "groups": {g: {"n": gr.n, "mrr": round(gr.mrr, 4)} for g, gr in (r.groups or {}).items()},
+                }
+                for r in reports
+            ],
+        }
+
     @app.get("/api/lm/status")
     def lm_status() -> dict:
         """حالة المحوّل العصبي (يُبنى ويدرَّب في وحدةٍ منفصلة)."""
