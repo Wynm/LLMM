@@ -235,7 +235,8 @@ def cmd_train(args: argparse.Namespace) -> int:
     val = f"{report['final_val_loss']:.3f}"
     print(_c(f"✔ اكتمل التدريب: خسارة {loss} · حجز {val}", GREEN))
     print(f"  {report['params']:,} وسيطًا · {report['steps_per_second']} خطوة/ثانية · {report['elapsed_s']}s")
-    print(f"  حُفظ في {args.out} — جرّب: python -m mishkat.cli generate \"العلم\"")
+    out_dir = f"{args.out}/lm" if not str(args.out).endswith("/lm") else str(args.out)
+    print(f"  حُفظ في {out_dir} — جرّب: python -m mishkat.cli generate \"العلم\"")
     return 0
 
 

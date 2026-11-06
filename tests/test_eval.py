@@ -154,3 +154,40 @@ def test_score_fuse_beats_rrf_on_golden_queries():
     score_rep = evaluate(ranked("score"), qs, k=10)
     rrf_rep = evaluate(ranked("rrf"), qs, k=10)
     assert score_rep.mrr >= rrf_rep.mrr
+
+
+# --------------------------------------------------- الدمج «المعجميّ أولًا»
+def test_lexical_first_keeps_semantic_only_below():
+    from mishkat.index.hybrid import lexical_first_fuse
+
+    lex = [("a", 10.0), ("b", 1.0)]
+    sem = [("z", 0.99), ("a", 0.5)]
+    hits = lexical_first_fuse(lex, sem, boost=0.35)
+    ids = [h.doc_id for h in hits]
+    assert ids.index("b") < ids.index("z")
+    # أقوى نتيجةٍ دلالية بحتة تبقى تحت أضعف نتيجةٍ معجمية
+    assert hits[ids.index("b")].score > hits[ids.index("z")].score
+
+
+def test_lexical_first_boost_cannot_overturn_clear_lead():
+    from mishkat.index.hybrid import lexical_first_fuse
+
+    lex = [("a", 20.0), ("b", 2.0)]
+    sem = [("b", 0.9), ("a", 0.1)]
+    hits = lexical_first_fuse(lex, sem, boost=0.35)
+    assert hits[0].doc_id == "a"
+
+
+def test_lexical_first_without_lexical_falls_back_to_semantic():
+    from mishkat.index.hybrid import lexical_first_fuse
+
+    hits = lexical_first_fuse([], [("x", 0.9), ("y", 0.5)])
+    assert [h.doc_id for h in hits] == ["x", "y"]
+
+
+def test_lexical_first_empty_and_limit():
+    from mishkat.index.hybrid import lexical_first_fuse
+
+    assert lexical_first_fuse([], []) == []
+    hits = lexical_first_fuse([("a", 3.0), ("b", 2.0), ("c", 1.0)], [("z", 0.5)], limit=2)
+    assert len(hits) == 2

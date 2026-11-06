@@ -128,3 +128,33 @@
 {"s": "doc:bio-03", "r": "يرتبط_ب", "t": "doc:bio-04"}
 {"s": "doc:bio-04", "r": "يرتبط_ب", "t": "doc:med-02"}
 {"s": "doc:bio-03", "r": "يوازي", "t": "doc:ling-03"}
+{"s": "person:abu-tammam", "r": "ألّف", "t": "doc:lit-01"}
+{"s": "person:al-mutanabbi", "r": "ألّف", "t": "doc:lit-02"}
+{"s": "person:al-hariri", "r": "ألّف", "t": "doc:lit-03"}
+{"s": "person:ibn-al-banna", "r": "ألّف", "t": "doc:math-05"}
+{"s": "person:hunayn", "r": "ألّف", "t": "doc:med-06"}
+{"s": "person:ulugh-beg", "r": "أسّس", "t": "place:samarkand"}
+{"s": "person:ulugh-beg", "r": "ألّف", "t": "doc:ast-06"}
+{"s": "person:al-maqdisi", "r": "ألّف", "t": "doc:geo-03"}
+{"s": "person:bolyai", "r": "أسّس", "t": "concept:bool-algebra"}
+{"s": "person:shannon", "r": "طوّر", "t": "concept:bool-algebra"}
+{"s": "doc:cs-04", "r": "يشرح", "t": "concept:bool-algebra"}
+{"s": "doc:rel-01", "r": "يعتمد على", "t": "concept:isnad"}
+{"s": "doc:med-05", "r": "يرتبط بـ", "t": "place:bimaristan"}
+{"s": "doc:art-03", "r": "يشرح", "t": "concept:arabesque"}
+{"s": "doc:lit-03", "r": "يرتبط بـ", "t": "doc:ling-05"}
+{"s": "doc:math-05", "r": "يرتبط بـ", "t": "doc:math-04"}
+{"s": "doc:ast-06", "r": "يرتبط بـ", "t": "doc:ast-05"}
+{"s": "doc:eng-04", "r": "يرتبط بـ", "t": "doc:water-01"}
+{"s": "doc:chem-03", "r": "يرتبط بـ", "t": "doc:chem-02"}
+{"s": "doc:city-03", "r": "يرتبط بـ", "t": "doc:arch-01"}
+{"s": "doc:env-03", "r": "يرتبط بـ", "t": "doc:env-02"}
+{"s": "doc:energy-03", "r": "يرتبط بـ", "t": "doc:energy-01"}
+{"s": "doc:econ-03", "r": "يرتبط بـ", "t": "doc:eco-01"}
+{"s": "doc:nav-02", "r": "يرتبط بـ", "t": "doc:nav-01"}
+{"s": "doc:edu-02", "r": "يرتبط بـ", "t": "doc:edu-01"}
+{"s": "doc:law-02", "r": "يرتبط بـ", "t": "doc:law-01"}
+{"s": "doc:ai-04", "r": "يرتبط بـ", "t": "doc:ai-02"}
+{"s": "doc:geo-03", "r": "يرتبط بـ", "t": "doc:geo-01"}
+{"s": "doc:med-06", "r": "يرتبط بـ", "t": "doc:med-01"}
+{"s": "doc:rel-02", "r": "يرتبط بـ", "t": "doc:phil-01"}

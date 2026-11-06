@@ -52,3 +52,20 @@
 {"id": "instrument:anbiq", "type": "أداة", "label": "الأنبيق", "note": "جهاز تقطير"}
 {"id": "instrument:naoura", "type": "أداة", "label": "الناعورة", "note": "رفع الماء بالطاقة المائية"}
 {"id": "instrument:camera", "type": "أداة", "label": "الكاميرا المظلمة", "note": "إسقاط الصورة عبر ثقب"}
+{"id": "person:abu-tammam", "type": "شخص", "label": "أبو تمام", "note": "شاعر عباسي، صاحب مدرسة الصنعة"}
+{"id": "person:al-mutanabbi", "type": "شخص", "label": "المتنبي", "note": "شاعر القرن الرابع، شعر الذات والحكمة"}
+{"id": "person:al-hariri", "type": "شخص", "label": "الحريري", "note": "صاحب المقامات، القرن السادس"}
+{"id": "person:ibn-al-banna", "type": "شخص", "label": "ابن البنّاء", "note": "رياضي مغربي، تلخيص أعمال الحساب"}
+{"id": "person:hunayn", "type": "شخص", "label": "حنين بن إسحاق", "note": "طبيب ومترجم، طبّ العيون"}
+{"id": "person:ulugh-beg", "type": "شخص", "label": "الغ بيك", "note": "فلكي سمرقند، الزيج السلطاني"}
+{"id": "person:al-maqdisi", "type": "شخص", "label": "المقدسي", "note": "جغرافي وصفّي، أحسن التقاسيم"}
+{"id": "person:bolyai", "type": "شخص", "label": "بولي", "note": "منطقي رياضياتي، الجبر البولياني"}
+{"id": "person:shannon", "type": "شخص", "label": "شانون", "note": "مؤسّس نظرية المعلومات"}
+{"id": "concept:isnad", "type": "مفهوم", "label": "السند", "note": "سلسلة رواة الحديث"}
+{"id": "concept:bayt-mal", "type": "مفهوم", "label": "المال العام", "note": "خزانة الدولة ومصارفها"}
+{"id": "concept:arabesque", "type": "مفهوم", "label": "الأرابيسك", "note": "زخرفة هندسية متشابكة"}
+{"id": "concept:hijra", "type": "مفهوم", "label": "الهجرة", "note": "بداية التقويم الهجري"}
+{"id": "tool:astrolabe-nav", "type": "أداة", "label": "البوصلة", "note": "إبرة مغناطيسية للملاحة"}
+{"id": "place:samarkand", "type": "مكان", "label": "سمرقند", "note": "مركز فلكي في آسيا الوسطى"}
+{"id": "place:bimaristan", "type": "مكان", "label": "البيمارستان", "note": "مستشفى مؤسّسي موقوف"}
+{"id": "concept:bool-algebra", "type": "مفهوم", "label": "الجبر البولياني", "note": "منطقٌ رياضي على قيمتين: صفر وواحد"}

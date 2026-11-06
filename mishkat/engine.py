@@ -31,7 +31,7 @@ from .graph.infer import InferenceEngine
 from .graph.query import run_query
 from .graph.store import GraphStore
 from .index.bm25 import BM25, BM25Params, best_snippet
-from .index.hybrid import rrf_fuse, score_fuse
+from .index.hybrid import lexical_first_fuse, rrf_fuse, score_fuse
 from .index.inverted import InvertedIndex
 from .index.hnsw import HNSWParams, build_from_matrix
 from .index.query import parse_query
@@ -242,9 +242,14 @@ class Engine:
                 "lexical": [(h.doc_id, h.score) for h in lexical],
                 "semantic": [(d, s) for d, s in semantic],
             }
-            weights = {"lexical": 1.0, "semantic": 0.85}
+            weights = {"lexical": 1.0, "semantic": 0.35}
             trace.weights = weights
-            fus = score_fuse(rankings, weights=weights)
+            fus = lexical_first_fuse(
+                rankings["lexical"],
+                rankings["semantic"],
+                boost=weights["semantic"],
+                limit=pool,
+            )
             lex_map = {h.doc_id: h for h in lexical}
             sem_map = dict(semantic)
             fused = [
