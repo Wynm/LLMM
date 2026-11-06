@@ -1,4 +1,4 @@
-.PHONY: help bootstrap test cov lint build run bench clean stats corpus-check
+.PHONY: help bootstrap test cov lint build run bench clean stats corpus-check train generate
 
 PY ?= python3
 PORT ?= 8000
@@ -10,6 +10,8 @@ help:
 	@echo "  make cov          الاختبارات مع التغطية"
 	@echo "  make build        بناء كل الفهارس (فهرس + متجهات + رسم)"
 	@echo "  make run          تشغيل الاستوديو على المنفذ $(PORT)"
+	@echo "  make train        تدريب المحوّل العصبي"
+	@echo "  make generate     توليد نصّ من المحوّل"
 	@echo "  make bench        تقرير أداء"
 	@echo "  make stats        إحصاءات المجموعة"
 	@echo "  make clean        حذف المخرجات المُشتقّة"
@@ -28,6 +30,12 @@ build:
 
 run:
 	$(PY) -m mishkat.cli serve --port $(PORT)
+
+train:
+	$(PY) -u -m mishkat.cli train --steps 2200 --lr 2e-3
+
+generate:
+	$(PY) -m mishkat.cli generate "$(PROMPT)" --length 220
 
 bench:
 	$(PY) -m mishkat.cli bench

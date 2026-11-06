@@ -281,14 +281,45 @@ class Engine:
             )
         hits = hits[:k]
 
+        # المقاطع: مقارنةٌ نصّية خفيفة (بلا تحليلٍ صرفيّ) لأن التحليل هنا
+        # يُضاعف زمن الاستعلام عشرات المرات من أجل إبرازٍ فقط.
+        stems = tuple(dict.fromkeys([t for t in trace.terms if t] + list(hits[0].matched))) if hits else ()
         for h in hits:
             doc = self.corpus.doc(h.doc_id)
-            terms = set(h.matched) | {
-                t for t in trace.terms if t in {t2.norm for t2 in _doc_tokens(doc)}
-            }
-            h.snippet = best_snippet(doc.body, terms or set(trace.terms))
+            h.snippet = self._snippet(doc, stems or tuple(trace.terms))
 
         return (hits, trace) if with_trace else hits
+
+    def _snippet(self, doc: Document, stems: tuple[str, ...], *, width: int = 190) -> str:
+        """أفضل جملةٍ في المستند، بمطابقة سابقةٍ نصّية سريعة (مع تخزين مؤقّت)."""
+        cache = self.__dict__.setdefault("_sent_cache", {})
+        cached = cache.get(doc.id)
+        if cached is None:
+            from .text.tokenize import split_sentences, tokenize
+
+            cached = []
+            for sent in split_sentences(doc.body):
+                forms = tuple(t.norm for t in tokenize(sent.text, sentences=False))
+                cached.append((sent.text, forms))
+            cache[doc.id] = cached
+        if not cached:
+            return doc.body[:width]
+
+        best, best_score = cached[0][0], -1
+        for text, forms in cached:
+            score = 0
+            for f in forms:
+                for st in stems:
+                    if st and (f.startswith(st) or st.startswith(f)) and min(len(st), len(f)) >= 3:
+                        score += 1
+                        break
+            if score > best_score:
+                best, best_score = text, score
+        out = best.strip()
+        if len(out) > width:
+            cut = out.rfind(" ", 0, width)
+            out = out[: cut if cut > 50 else width].rstrip() + "…"
+        return out
 
     # ------------------------------------------------------ تشابه المستندات
     def similar_docs(self, doc_id: str, k: int = 6) -> list[tuple[str, float]]:

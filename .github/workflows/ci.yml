@@ -1,0 +1,40 @@
+name: ci
+
+on:
+  push:
+    branches: [main, "arena/**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: تهيئة بايثون
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - name: تثبيت المتطلّبات
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: فحص صحّة المجموعة
+        run: python -m mishkat.cli corpus-check
+      - name: الاختبارات
+        run: python -m pytest -q
+      - name: بناء الفهارس
+        run: python -m mishkat.cli build
+      - name: تحقّق سريع من الواجهة
+        run: |
+          python - <<'PY'
+          from fastapi.testclient import TestClient
+          from mishkat.api.app import create_app
+          c = TestClient(create_app())
+          r = c.get("/api/search", params={"q": "ابن الهيثم"})
+          assert r.status_code == 200 and r.json()["results"]
+          print("API ok:", r.json()["results"][0]["title"])
+          PY
