@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>مِشكاة · محرّك معرفة عربي محلّي</title>
+<meta name="description" content="مِشكاة: محرّك معرفة عربي يعمل دون إنترنت — بحث هجين، فضاء دلالي، رسم معرفي، ومختبر نصّ." />
+<link rel="stylesheet" href="/assets/style.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%230b1220'/%3E%3Cpath d='M16 5c4 3.5 6 7 6 11s-2 7.5-6 11c-4-3.5-6-7-6-11S12 8.5 16 5z' fill='%23e0b45c'/%3E%3C/svg%3E" />
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+
+<header class="topbar">
+  <a class="brand" href="#/" aria-label="مِشكاة">
+    <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
+      <path d="M20 3c5.5 5 9 10.5 9 17s-3.5 12-9 17c-5.5-5-9-10.5-9-17S14.5 8 20 3z" fill="none" stroke="currentColor" stroke-width="1.4"/>
+      <circle cx="20" cy="20" r="4.2" fill="currentColor" opacity=".9"/>
+      <path d="M20 8v6M20 26v6M8 20h6M26 20h6" stroke="currentColor" stroke-width="1.2" opacity=".65"/>
+    </svg>
+    <span class="brand-text">
+      <b>مِشكاة</b>
+      <small>محرّك معرفةٍ عربيٌّ محلّي</small>
+    </span>
+  </a>
+
+  <nav class="tabs" role="tablist" aria-label="أقسام الاستوديو">
+    <button class="tab is-active" data-view="search" role="tab">بحث</button>
+    <button class="tab" data-view="graph" role="tab">الرسم</button>
+    <button class="tab" data-view="space" role="tab">الفضاء</button>
+    <button class="tab" data-view="lab" role="tab">مختبر النصّ</button>
+    <button class="tab" data-view="dash" role="tab">اللوحة</button>
+  </nav>
+
+  <div class="status" id="status" title="حالة المحرّك">
+    <span class="dot" id="status-dot"></span>
+    <span id="status-text">جارٍ التحميل…</span>
+  </div>
+</header>
+
+<main>
+  <!-- ═════════════════════════ البحث ═════════════════════════ -->
+  <section class="view is-active" id="view-search">
+    <div class="search-hero">
+      <h1 class="hero-title">اسأل مكتبتك، لا محرّك بحثٍ آخر.</h1>
+      <p class="hero-sub">
+        بحثٌ هجين يجمع مطابقة الجذر العربي بالفهم الدلالي، ويعرض <em>سبب</em> كل نتيجة.
+      </p>
+      <div class="searchbox">
+        <input id="q" type="search" placeholder="مثال: كيف قاس البيروني الأرض؟ / الوقف وتمويل المدارس" autocomplete="off" spellcheck="false" />
+        <button id="search-btn" class="primary">ابحث</button>
+      </div>
+      <div class="search-controls">
+        <div class="seg" id="mode-seg" role="group" aria-label="نمط البحث">
+          <button class="is-active" data-mode="hybrid">هجين</button>
+          <button data-mode="lexical">معجمي</button>
+          <button data-mode="semantic">دلالي</button>
+        </div>
+        <div class="chips" id="domain-chips"></div>
+      </div>
+      <div class="suggestions" id="suggestions"></div>
+    </div>
+
+    <div class="search-body">
+      <div class="results" id="results" aria-live="polite"></div>
+      <aside class="trace-panel" id="trace-panel">
+        <h3>أثر المحرّك</h3>
+        <p class="muted">كل نتيجة تُرفَق بسببها: المصطلحات، الجذور، الرتبة، والزمن.</p>
+        <dl id="trace-dl"></dl>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════ الرسم ═════════════════════════ -->
+  <section class="view" id="view-graph">
+    <div class="section-head">
+      <h2>الرسم المعرفي</h2>
+      <p class="muted">مستندات، أشخاص، أماكن، مفاهيم — وحوافٌّ مستنتجة بقواعدَ صريحة.</p>
+    </div>
+    <div class="graph-layout">
+      <div class="graph-canvas-wrap">
+        <canvas id="graph-canvas"></canvas>
+        <div class="graph-toolbar">
+          <button id="graph-reset" class="ghost small">إعادة الضبط</button>
+          <button id="graph-freeze" class="ghost small">تجميد</button>
+          <span class="muted small" id="graph-hint">اسحب العُقد · عجلة الفأرة للتقريب</span>
+        </div>
+        <div class="graph-legend" id="graph-legend"></div>
+      </div>
+      <aside class="graph-side">
+        <h3>استعلام بلغة MQL</h3>
+        <form id="mql-form">
+          <textarea id="mql" rows="3" spellcheck="false">MATCH (?x) -[ألّف]-> (?y)</textarea>
+          <button class="primary small" type="submit">تنفيذ</button>
+        </form>
+        <div class="examples" id="mql-examples"></div>
+        <div id="mql-result" class="mql-result"></div>
+        <div id="node-panel" class="node-panel"></div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════ الفضاء ═════════════════════════ -->
+  <section class="view" id="view-space">
+    <div class="section-head">
+      <h2>الفضاء الدلالي</h2>
+      <p class="muted">متجهاتٌ تعلّمها المحرّك من السياق نفسه (تجاور ← PPMI ← SVD). لا قاموس مرادفات، بل إحصاء.</p>
+    </div>
+    <div class="space-grid">
+      <div class="panel">
+        <h3>جيران الكلمة</h3>
+        <div class="inline-form">
+          <input id="word-input" type="text" placeholder="اكتب كلمة عربية… مثل: فلك" />
+          <button id="word-btn" class="primary small">ابحث</button>
+        </div>
+        <div id="word-result" class="word-result"></div>
+      </div>
+      <div class="panel">
+        <h3>خريطة المواضيع</h3>
+        <p class="muted small">كل نقطةٍ مستند، وإسقاطها على أول مُتجهين أساسيَّين.</p>
+        <canvas id="map-canvas"></canvas>
+        <div class="map-legend" id="map-legend"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>عناقيد المواضيع (k-means)</h3>
+      <div id="clusters" class="clusters"></div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════ مختبر النصّ ═════════════════════════ -->
+  <section class="view" id="view-lab">
+    <div class="section-head">
+      <h2>مختبر النصّ</h2>
+      <p class="muted">الصق أيّ نصٍّ عربي: تطبيع، تقطيع، إيقاف، تجذيع، واستخراج جذر — كلمةً كلمة.</p>
+    </div>
+    <div class="lab-grid">
+      <div class="panel">
+        <textarea id="lab-text" rows="7" spellcheck="false">إنّ العلم نورٌ يرفع الأمم، والجهل ظلامٌ يُهبطها. وقد بنى العلماءُ مدارسَ ومعاهدَ، ووقفوا أوقافًا تُنفق على التعليم.</textarea>
+        <div class="inline-form">
+          <button id="lab-btn" class="primary small">حلّل</button>
+          <label class="toggle"><input type="checkbox" id="lab-show-stop" /> إظهار كلمات الإيقاف</label>
+        </div>
+        <div id="lab-summary" class="lab-summary"></div>
+      </div>
+      <div class="panel">
+        <h3>الكلمات</h3>
+        <div id="lab-tokens" class="lab-tokens"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════ اللوحة ═════════════════════════ -->
+  <section class="view" id="view-dash">
+    <div class="section-head">
+      <h2>لوحة المحرّك</h2>
+      <p class="muted">كل رقمٍ هنا مقيسٌ في هذه الجلسة، لا مُدَّعى.</p>
+    </div>
+    <div class="cards" id="cards"></div>
+    <div class="dash-grid">
+      <div class="panel">
+        <h3>توزيع النطاقات</h3>
+        <div id="domain-bars" class="bars"></div>
+      </div>
+      <div class="panel">
+        <h3>العلاقات في الرسم</h3>
+        <div id="rel-bars" class="bars"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>جودة الاسترجاع — على 59 استعلامًا مُعنونًا</h3>
+      <p class="muted small">MRR = متوسّط مقلوب رتبة أوّل جواب صحيح. R@10 = نسبة الأجوبة الصحيحة في أعلى عشرة.</p>
+      <div id="eval-table" class="eval-table"></div>
+    </div>
+    <div class="panel">
+      <h3>تفاصيل البناء</h3>
+      <dl id="build-dl" class="kv"></dl>
+    </div>
+  </section>
+</main>
+
+<dialog id="doc-modal" class="doc-modal">
+  <button class="close" id="modal-close" aria-label="إغلاق">✕</button>
+  <div id="modal-body"></div>
+</dialog>
+
+<script src="/assets/app.js" type="module"></script>
+</body>
+</html>

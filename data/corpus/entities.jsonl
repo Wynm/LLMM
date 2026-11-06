@@ -1,0 +1,54 @@
+{"id": "person:al-khwarizmi", "type": "شخص", "label": "الخوارزمي", "note": "رياضي وفلكي، القرن الثالث الهجري، بغداد"}
+{"id": "person:al-battani", "type": "شخص", "label": "البتاني", "note": "فلكي من حرّان، صاحب الزيج الصابئ"}
+{"id": "person:al-biruni", "type": "شخص", "label": "البيروني", "note": "عالم موسوعي، صاحب القانون المسعودي وتحقيق ما للهند"}
+{"id": "person:al-tusi", "type": "شخص", "label": "نصير الدين الطوسي", "note": "فلكي ومتكلّم، باني مرصد مراغة"}
+{"id": "person:ibn-al-shatir", "type": "شخص", "label": "ابن الشاطر", "note": "فلكي دمشق، ناقد النموذج البطلمي"}
+{"id": "person:al-kashi", "type": "شخص", "label": "الكاشي", "note": "فلكي سمرقند، صاحب مفتاح الحساب"}
+{"id": "person:omar-khayyam", "type": "شخص", "label": "عمر الخيام", "note": "رياضي وشاعر، حلّ التكعيبيات هندسيًّا"}
+{"id": "person:ibn-sina", "type": "شخص", "label": "ابن سينا", "note": "طبيب وفيلسوف، صاحب القانون في الطب"}
+{"id": "person:ibn-al-nafis", "type": "شخص", "label": "ابن النفيس", "note": "طبيب، واصف الدورة الدموية الصغرى"}
+{"id": "person:al-zahrawi", "type": "شخص", "label": "الزهراوي", "note": "جرّاح الأندلس، صاحب التصريف"}
+{"id": "person:al-razi", "type": "شخص", "label": "الرازي", "note": "طبيب سريري، صاحب كتاب الجدري والحصبة"}
+{"id": "person:jabir", "type": "شخص", "label": "جابر بن حيان", "note": "كيميائي، مدرسة التجربة والتقطير"}
+{"id": "person:al-kindi", "type": "شخص", "label": "الكندي", "note": "فيلسوف العرب، صاحب الفلسفة الأولى"}
+{"id": "person:al-farabi", "type": "شخص", "label": "الفارابي", "note": "فيلسوف، صاحب المدينة الفاضلة"}
+{"id": "person:ibn-rushd", "type": "شخص", "label": "ابن رشد", "note": "فيلسوف وقاضٍ، شارح أرسطو"}
+{"id": "person:al-ghazali", "type": "شخص", "label": "الغزالي", "note": "متكلّم وفيلسوف، صاحب تهافت الفلاسفة"}
+{"id": "person:ibn-miskawayh", "type": "شخص", "label": "ابن مسكويه", "note": "فيلسوف أخلاق، صاحب تهذيب الأخلاق"}
+{"id": "person:al-khalil", "type": "شخص", "label": "الخليل بن أحمد", "note": "واضع العروض ومعجم العين"}
+{"id": "person:sibawayh", "type": "شخص", "label": "سيبويه", "note": "صاحب الكتاب في النحو"}
+{"id": "person:ibn-jinni", "type": "شخص", "label": "ابن جني", "note": "لساني، صاحب الخصائص"}
+{"id": "person:ibn-khaldun", "type": "شخص", "label": "ابن خلدون", "note": "مؤسّس علم العمران، صاحب المقدمة"}
+{"id": "person:al-masudi", "type": "شخص", "label": "المسعودي", "note": "مؤرّخ ورحّالة، صاحب مروج الذهب"}
+{"id": "person:al-idrisi", "type": "شخص", "label": "الإدريسي", "note": "جغرافي، صاحب نزهة المشتاق"}
+{"id": "person:ibn-battuta", "type": "شخص", "label": "ابن بطوطة", "note": "رحّالة، صاحب التحفة"}
+{"id": "person:al-jazari", "type": "شخص", "label": "الجزري", "note": "مهندس آلات، صاحب الجامع في الحيل"}
+{"id": "person:ibn-al-baytar", "type": "شخص", "label": "ابن البيطار", "note": "عالم نبات طبي، صاحب الجامع"}
+{"id": "person:al-jahiz", "type": "شخص", "label": "الجاحظ", "note": "أديب وعالم حيوان، صاحب كتاب الحيوان"}
+{"id": "person:nizam-al-mulk", "type": "شخص", "label": "نظام الملك", "note": "وزير سلجوقي، باني المدارس النظامية"}
+{"id": "person:ibn-juzay", "type": "شخص", "label": "ابن جزي الكلبي", "note": "مدوّن رحلة ابن بطوطة"}
+{"id": "place:baghdad", "type": "مكان", "label": "بغداد", "note": "حاضرة العلم والترجمة"}
+{"id": "place:harran", "type": "مكان", "label": "حرّان", "note": "مدينة البتاني"}
+{"id": "place:maragha", "type": "مكان", "label": "مراغة", "note": "موقع المرصد الطوسي"}
+{"id": "place:damascus", "type": "مكان", "label": "دمشق", "note": "حاضرة ابن الشاطر وابن النفيس"}
+{"id": "place:samarkand", "type": "مكان", "label": "سمرقند", "note": "موقع مرصد الكاشي"}
+{"id": "place:cordoba", "type": "مكان", "label": "قرطبة", "note": "حاضرة ابن رشد"}
+{"id": "place:qayrawan", "type": "مكان", "label": "القيروان", "note": "مركز طبي مبكّر"}
+{"id": "place:sicily", "type": "مكان", "label": "صقلية", "note": "ملتقى الترجمة والنقل"}
+{"id": "place:fez", "type": "مكان", "label": "فاس", "note": "حاضرة مغربية علمية"}
+{"id": "concept:jabr", "type": "مفهوم", "label": "الجبر", "note": "علم حلّ المعادلات"}
+{"id": "concept:algorithm", "type": "مفهوم", "label": "الخوارزمية", "note": "إجراء منتهٍ محدّد"}
+{"id": "concept:muqaddimah", "type": "مفهوم", "label": "علم العمران", "note": "نظرية الاجتماع الخلدونية"}
+{"id": "concept:astrolabe", "type": "مفهوم", "label": "الإسطرلاب", "note": "آلة قياس فلكية مسطّحة"}
+{"id": "concept:manazir", "type": "مفهوم", "label": "علم المناظر", "note": "البصريات الهندسية"}
+{"id": "concept:waqf", "type": "مفهوم", "label": "الوقف", "note": "تمويل مؤسسي دائم"}
+{"id": "concept:muqarnas", "type": "مفهوم", "label": "المقرنصات", "note": "عنصر إنشائي زخرفي ناقل للحمل"}
+{"id": "concept:hawala", "type": "مفهوم", "label": "الحوالة", "note": "أداة تحويل مالي"}
+{"id": "concept:maqam", "type": "مفهوم", "label": "المقام", "note": "نظام صوتي عربي"}
+{"id": "concept:arud", "type": "مفهوم", "label": "العروض", "note": "علم الوزن الشعري"}
+{"id": "concept:ihtisab", "type": "مفهوم", "label": "الحسبة", "note": "رقابة السوق والأخلاق العامة"}
+{"id": "concept:retrieval", "type": "مفهوم", "label": "الاسترجاع", "note": "إيجاد المادة الأكثر صلةً بسؤال"}
+{"id": "concept:embedding", "type": "مفهوم", "label": "التضمين المتجهي", "note": "تمثيل المعنى في فضاء عددي"}
+{"id": "instrument:anbiq", "type": "أداة", "label": "الأنبيق", "note": "جهاز تقطير"}
+{"id": "instrument:naoura", "type": "أداة", "label": "الناعورة", "note": "رفع الماء بالطاقة المائية"}
+{"id": "instrument:camera", "type": "أداة", "label": "الكاميرا المظلمة", "note": "إسقاط الصورة عبر ثقب"}
